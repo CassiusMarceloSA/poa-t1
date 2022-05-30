@@ -1,6 +1,4 @@
 public class RabinKarp {
-    private static final int alphabetSize = 26;
-    private static final int quotient = 997;
     private IterationCounter counter;
 
     public RabinKarp(IterationCounter counter) {
@@ -18,12 +16,21 @@ public class RabinKarp {
             counter.increment();
 
             if (patternHash == textHashSum) {
-                return i;
+                for(int j = 0; j < M; j++) { 
+                    if(text.charAt(i + j) != pattern.charAt(j)) { 
+                        break;
+                    }
+
+                    if(j == M - 1) { 
+                        return i;
+                    }
+                }
+            } else { 
+                int nextCharacterIndex = i + M;
+                double nextHash = hashCalc(text.charAt(nextCharacterIndex));
+                double firstHash = hashCalc(text.charAt(i));
+                textHashSum += nextHash - firstHash;
             }
-            int nextCharacterIndex = i + M;
-            double nextHash = hashCalc(text.charAt(nextCharacterIndex), M - 1, M - 1);
-            double firstHash = hashCalc(text.charAt(i), M - 1, 0);
-            textHashSum += nextHash - firstHash;
         }
         return N;
     }
@@ -32,12 +39,12 @@ public class RabinKarp {
         double h = 0;
         for (int i = 0; i < M; i++) {
             counter.increment();
-            h += hashCalc(s.charAt(i), M - 1, i);
+            h += hashCalc(s.charAt(i));
         }
         return h;
     }
 
-    private static double hashCalc(char character, int textLength, int index) {
+    private static double hashCalc(char character) {
         // return (character * Math.pow(alphabetSize, textLength - index)) % quotient;
         return character;
     }
